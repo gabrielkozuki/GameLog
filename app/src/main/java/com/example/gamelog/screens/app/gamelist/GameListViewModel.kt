@@ -2,7 +2,7 @@ package com.example.gamelog.screens.app.gamelist
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.gamelog.model.LocalData
+import com.example.gamelog.data.model.LocalData
 
 class GameListViewModel(val localData: LocalData, val navController: NavController): ViewModel() {
 

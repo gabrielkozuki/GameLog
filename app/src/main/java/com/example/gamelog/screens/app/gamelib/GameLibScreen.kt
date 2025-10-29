@@ -51,7 +51,7 @@ fun GameLibScreen(paddingValues: PaddingValues, gameLibViewModel: GameLibViewMod
         FloatingActionButton(
             modifier = Modifier.padding(24.dp),
             onClick = {
-                // TODO: Add navigation to Add Game
+                gameLibViewModel.addGame()
             }
         ) {
             Text(

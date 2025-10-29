@@ -2,7 +2,7 @@ package com.example.gamelog.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.gamelog.model.LocalData
+import com.example.gamelog.data.model.LocalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

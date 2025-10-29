@@ -1,4 +1,4 @@
-package com.example.gamelog.model
+package com.example.gamelog.data.model
 
 import android.content.Context
 import android.content.SharedPreferences
