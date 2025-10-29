@@ -1,25 +1,29 @@
 package com.example.gamelog.screens.app.gamelib
 
-import Game
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.gamelog.data.model.LocalData
+import com.example.gamelog.data.model.GameDetail
+import com.example.gamelog.data.repository.GameRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class GameLibViewModel(val localData: LocalData, val navController: NavController): ViewModel() {
+class GameLibViewModel(val navController: NavController): ViewModel() {
 
-    private val _games = mutableStateOf<List<Game>>(emptyList())
-    val games: State<List<Game>> = _games
+    private val _allGames = MutableStateFlow<List<GameDetail>>(emptyList())
+    private val _isLoading = MutableStateFlow(false)
 
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
+    val allGames = _allGames.asStateFlow()
+    val isLoading = _isLoading.asStateFlow()
 
-    private val _errorMessage = mutableStateOf<String?>(null)
-    val errorMessage: State<String?> = _errorMessage
+    fun loadAllGames() {
+        _isLoading.value = true
+        GameRepository.getAllGames { games ->
+            _allGames.value = games
+            _isLoading.value = false
+        }
+    }
 
     fun addGame() {
         navController.navigate("search")
     }
-
 }

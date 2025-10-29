@@ -15,17 +15,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.gamelog.R
-import com.example.gamelog.data.model.LocalData
 import com.example.gamelog.screens.app.AccountScreen
 import com.example.gamelog.screens.app.AccountViewModel
 import com.example.gamelog.screens.app.gamelib.*
+import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
+import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailScreen
+import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
 import com.example.gamelog.screens.app.gamelist.GameListScreen
 import com.example.gamelog.screens.app.gamelist.GameListViewModel
 import com.example.gamelog.screens.app.review.ReviewScreen
 import com.example.gamelog.screens.app.review.ReviewViewModel
 import com.example.gamelog.screens.login.*
 
-class CallScaffold(private val localData: LocalData, val navController: NavController) {
+class CallScaffold(val navController: NavController) {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -43,27 +45,27 @@ class CallScaffold(private val localData: LocalData, val navController: NavContr
                 Routes.Login.route -> {
                     val context = LocalContext.current
                     val viewModel: LoginViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController, context.applicationContext)
+                        factory = ViewModelFactory( navController, context.applicationContext)
                     )
                     LoginScreen(paddingValues, viewModel)
                 }
                 Routes.Register.route -> {
                     val context = LocalContext.current
                     val viewModel: RegisterViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController, context.applicationContext)
+                        factory = ViewModelFactory( navController, context.applicationContext)
                     )
                     RegisterScreen(paddingValues, viewModel)
                 }
                 Routes.ForgotPassword.route -> {
                     val context = LocalContext.current
                     val viewModel: ForgotPasswordViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController, context.applicationContext)
+                        factory = ViewModelFactory( navController, context.applicationContext)
                     )
                     ForgotPasswordScreen(paddingValues, viewModel)
                 }
                 Routes.Search.route -> {
                     val viewModel: SearchViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory( navController)
                     )
                     SearchScreen(paddingValues, viewModel)
                 }
@@ -75,14 +77,14 @@ class CallScaffold(private val localData: LocalData, val navController: NavContr
     @Composable
     fun CreateGameDetailScreen(
         viewModel: GameDetailViewModel,
-        gameId: Int
+        mode: GameDetailMode
     ) {
         Scaffold (
             topBar = {
                 CreateCenterAlignedTopAppBar(string = "")
             }
         ) { innerPadding ->
-            GameDetailScreen(innerPadding, viewModel, gameId)
+            GameDetailScreen(innerPadding, viewModel, mode)
         }
     }
 
@@ -137,26 +139,26 @@ class CallScaffold(private val localData: LocalData, val navController: NavContr
             when(selectedIndex) {
                 0 -> {
                     val viewModel: GameLibViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(navController)
                     )
                     GameLibScreen(paddingValues, viewModel)
                 }
                 1 -> {
                     val viewModel: GameListViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(navController)
                     )
                     GameListScreen(paddingValues, viewModel)
                 }
                 2 -> {
                     val viewModel: ReviewViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(navController)
                     )
                     ReviewScreen(paddingValues, viewModel)
                 }
                 3 -> {
                     val context = LocalContext.current
                     val viewModel: AccountViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController, context.applicationContext)
+                        factory = ViewModelFactory(navController, context.applicationContext)
                     )
                     AccountScreen(paddingValues, viewModel)
                 }

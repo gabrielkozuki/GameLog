@@ -9,61 +9,70 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.gamelog.data.model.LocalData
-import com.example.gamelog.screens.app.gamelib.GameDetailViewModel
+import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
+import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
 
 class Navigation {
     private lateinit var navController: NavHostController
-    private lateinit var localData: LocalData
 
     @Composable
     fun Create() {
         navController = rememberNavController()
-        localData = LocalData(LocalContext.current)
 
         NavHost(navController = navController, startDestination = Routes.Login.route) {
             // login
             composable(Routes.Login.route) {
-                CallScaffold(localData, navController).CreateScreen("login")
+                CallScaffold(navController).CreateScreen("login")
             }
             composable(Routes.Register.route) {
-                CallScaffold(localData, navController).CreateScreen("register")
+                CallScaffold(navController).CreateScreen("register")
             }
             composable(Routes.ForgotPassword.route) {
-                CallScaffold(localData, navController).CreateScreen("forgotPassword")
+                CallScaffold(navController).CreateScreen("forgotPassword")
             }
 
             // app
             composable(Routes.GameLib.route) {
-                CallScaffold(localData, navController).CreateScreenApp()
+                CallScaffold(navController).CreateScreenApp()
             }
             composable(Routes.Search.route) {
-                CallScaffold(localData, navController).CreateScreen("search")
+                CallScaffold(navController).CreateScreen("search")
             }
             composable(
                 route = Routes.GameDetail.route,
-                arguments = listOf(navArgument("gameId") { type = NavType.IntType })
+                arguments = listOf(
+                    navArgument("mode") { type = NavType.StringType },
+                    navArgument("id") { type = NavType.StringType }
+                )
             ) { backStackEntry ->
                 val context = LocalContext.current
-                val gameId = backStackEntry.arguments?.getInt("gameId") ?: 0
+                val modeStr = backStackEntry.arguments?.getString("mode") ?: "create"
+                val id = backStackEntry.arguments?.getString("id") ?: "0"
+
+                val mode = when (modeStr) {
+                    "create" -> GameDetailMode.Create(id.toIntOrNull() ?: 0)
+                    "edit" -> GameDetailMode.Edit(id)
+                    else -> GameDetailMode.Create(0)
+                }
+
                 val viewModel: GameDetailViewModel = viewModel(
-                    factory = ViewModelFactory(localData, navController, context.applicationContext)
+                    factory = ViewModelFactory(navController, context.applicationContext)
                 )
 
-                CallScaffold(localData, navController).CreateGameDetailScreen(
+                CallScaffold(navController).CreateGameDetailScreen(
                     viewModel = viewModel,
-                    gameId = gameId
+                    mode = mode
                 )
             }
 
             composable(Routes.GameList.route) {
-                CallScaffold(localData, navController).CreateScreenApp()
+                CallScaffold(navController).CreateScreenApp()
             }
             composable(Routes.Review.route) {
-                CallScaffold(localData, navController).CreateScreenApp()
+                CallScaffold(navController).CreateScreenApp()
             }
             composable(Routes.Account.route) {
-                CallScaffold(localData, navController).CreateScreenApp()
+                CallScaffold(navController).CreateScreenApp()
             }
         }
     }

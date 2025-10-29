@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.gamelog.base.Routes
 import com.example.gamelog.data.api.RetrofitInstance
-import com.example.gamelog.data.model.LocalData
+import com.example.gamelog.data.repository.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class SearchViewModel(val localData: LocalData, val navController: NavController): ViewModel() {
+class SearchViewModel(val navController: NavController): ViewModel() {
 
     private val _search = MutableStateFlow<String>("")
     val search: StateFlow<String> = _search
@@ -59,7 +59,13 @@ class SearchViewModel(val localData: LocalData, val navController: NavController
 
     fun gameDetail(id: Int?) {
         id?.let {
-            navController.navigate(Routes.GameDetail.createRoute(it))
+            GameRepository.getGame(it) { existingGame ->
+                if (existingGame != null) {
+                    navController.navigate(Routes.GameDetail.editRoute(it.toString()))
+                } else {
+                    navController.navigate(Routes.GameDetail.createRoute(it))
+                }
+            }
         }
     }
 

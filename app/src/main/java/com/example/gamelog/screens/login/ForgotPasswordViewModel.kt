@@ -7,13 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.gamelog.data.model.LocalData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class ForgotPasswordViewModel(val localData: LocalData, val navController: NavController, val applicationContext: Context): ViewModel() {
+class ForgotPasswordViewModel(val navController: NavController, val applicationContext: Context): ViewModel() {
 
     private var _email = MutableStateFlow("")
     val email: StateFlow<String> = _email

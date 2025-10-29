@@ -1,6 +1,8 @@
+import com.google.firebase.database.IgnoreExtraProperties
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
+@IgnoreExtraProperties
 @Serializable
 data class Game(
     val slug: String? = null,
@@ -35,11 +37,13 @@ data class Game(
     val genres: List<Genre>? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class PlatformContainer(
     val platform: Platform? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class Platform(
     val id: Int? = null,
@@ -47,11 +51,13 @@ data class Platform(
     val slug: String? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class StoreContainer(
     val store: Store? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class Store(
     val id: Int? = null,
@@ -59,6 +65,7 @@ data class Store(
     val slug: String? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class Rating(
     val id: Int? = null,
@@ -67,6 +74,7 @@ data class Rating(
     val percent: Double? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class AddedByStatus(
     val yet: Int? = null,
@@ -77,6 +85,7 @@ data class AddedByStatus(
     val playing: Int? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class Tag(
     val id: Int? = null,
@@ -87,6 +96,7 @@ data class Tag(
     @SerializedName("image_background") val imageBackground: String? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class EsrbRating(
     val id: Int? = null,
@@ -96,12 +106,14 @@ data class EsrbRating(
     @SerializedName("name_ru") val nameRu: String? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class ShortScreenshot(
     val id: Int? = null,
     val image: String? = null
 )
 
+@IgnoreExtraProperties
 @Serializable
 data class Genre(
     val id: Int? = null,

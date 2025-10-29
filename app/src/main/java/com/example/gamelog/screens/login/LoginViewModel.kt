@@ -5,13 +5,12 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.gamelog.base.Routes
-import com.example.gamelog.data.model.LocalData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class LoginViewModel(val localData: LocalData, val navController: NavController, val applicationContext: Context): ViewModel() {
+class LoginViewModel(val navController: NavController, val applicationContext: Context): ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 

@@ -1,7 +1,5 @@
 package com.example.gamelog.ui.components
 
-import Game
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,10 +21,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.gamelog.data.model.GameDetail
 import com.example.gamelog.data.util.formatDate
 
 @Composable
-fun GameCardComponent(game: Game, onClick: () -> Unit = {}) {
+fun GameDetailCardComponent(gameDetail: GameDetail, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,10 +35,10 @@ fun GameCardComponent(game: Game, onClick: () -> Unit = {}) {
         onClick = onClick
     ) {
         Column {
-            game.backgroundImage?.let { imageUrl ->
+            gameDetail.backgroundImage?.let { imageUrl ->
                 AsyncImage(
                     model = imageUrl,
-                    contentDescription = game.name,
+                    contentDescription = gameDetail.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(180.dp),
@@ -50,7 +49,7 @@ fun GameCardComponent(game: Game, onClick: () -> Unit = {}) {
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
-                game.name?.let { name ->
+                gameDetail.name?.let { name ->
                     Text(
                         text = name,
                         style = MaterialTheme.typography.titleMedium,
@@ -59,7 +58,7 @@ fun GameCardComponent(game: Game, onClick: () -> Unit = {}) {
                     )
                 }
 
-                game.released?.let { releaseDate ->
+                gameDetail.released?.let { releaseDate ->
                     Text(
                         text = releaseDate.formatDate(),
                         style = MaterialTheme.typography.bodySmall,
@@ -68,8 +67,8 @@ fun GameCardComponent(game: Game, onClick: () -> Unit = {}) {
                     )
                 }
 
-                game.rating?.let { rating ->
-                    Row (
+                gameDetail.rating?.let { rating ->
+                    Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(

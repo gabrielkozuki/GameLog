@@ -5,10 +5,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import com.example.gamelog.data.model.LocalData
 
 class ViewModelFactory(
-    private val localData: LocalData,
     private val navController: NavController? = null,
     private val context: Context? = null
 ) : ViewModelProvider.Factory {
@@ -20,29 +18,23 @@ class ViewModelFactory(
 
     private fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
         val constructorSignatures = listOf(
-            // (LocalData, NavController, Context)
+            // (NavController, Context)
             Triple(
-                arrayOf(LocalData::class.java, NavController::class.java, Context::class.java),
-                arrayOf(localData, navController, context),
-                "LocalData, NavController, Context"
+                arrayOf(NavController::class.java, Context::class.java),
+                arrayOf(navController, context),
+                "NavController, Context"
             ),
-            // (LocalData, NavController)
+            // (NavController)
             Triple(
-                arrayOf(LocalData::class.java, NavController::class.java),
-                arrayOf(localData, navController),
-                "LocalData, NavController"
+                arrayOf(NavController::class.java),
+                arrayOf(navController),
+                "NavController"
             ),
-            // (LocalData, Context)
+            // (Context)
             Triple(
-                arrayOf(LocalData::class.java, Context::class.java),
-                arrayOf(localData, context),
-                "LocalData, Context"
-            ),
-            // (LocalData)
-            Triple(
-                arrayOf(LocalData::class.java),
-                arrayOf(localData),
-                "LocalData"
+                arrayOf(Context::class.java),
+                arrayOf(context),
+                "Context"
             )
         )
 

@@ -9,8 +9,10 @@ sealed class Routes(val route: String) {
     // app
     data object GameLib: Routes("gameLib")
     data object Search: Routes("search")
-    data object GameDetail: Routes("gameDetail/{gameId}") {
-        fun createRoute(gameId: Int) = "gameDetail/$gameId"
+
+    data object GameDetail: Routes("gameDetail/{mode}/{id}") {
+        fun createRoute(gameId: Int) = "gameDetail/create/$gameId"
+        fun editRoute(firebaseId: String) = "gameDetail/edit/$firebaseId"
     }
 
     data object GameList: Routes("gameList")

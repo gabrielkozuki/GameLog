@@ -1,5 +1,6 @@
 package com.example.gamelog.screens.app.gamelib
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,9 @@ import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,14 +29,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gamelog.data.model.GameStatus
 import kotlinx.coroutines.launch
+import kotlin.text.get
 
 @Composable
 fun GameLibScreen(paddingValues: PaddingValues, gameLibViewModel: GameLibViewModel) {
 
     val pages = arrayListOf(
         "Jogando",
-        "Na Fila",
+        "Backlog",
         "Lista de Desejos",
         "Finalizado",
         "Abandonado",
@@ -68,6 +74,18 @@ fun StatusTabCarousel(pages: List<String>, paddingValues: PaddingValues, gameLib
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val coroutineScope = rememberCoroutineScope()
 
+    val statusMap = mapOf(
+        0 to GameStatus.JOGANDO,
+        1 to GameStatus.BACKLOG,
+        2 to GameStatus.LISTA_DE_DESEJOS,
+        3 to GameStatus.FINALIZADO,
+        4 to GameStatus.ABANDONADO
+    )
+
+    LaunchedEffect(Unit) {
+        gameLibViewModel.loadAllGames()
+    }
+
     Box(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -98,14 +116,15 @@ fun StatusTabCarousel(pages: List<String>, paddingValues: PaddingValues, gameLib
 
     HorizontalPager(
         state = pagerState,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        key = { page -> statusMap[page]?.value ?: page }
     ) { page ->
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Conteúdo para ${pages[page]}")
-        }
+        val status = statusMap[page] ?: GameStatus.JOGANDO
+
+        GameListContentForStatus(
+            gameLibViewModel = gameLibViewModel,
+            status = status
+        )
     }
 }
 
