@@ -1,12 +1,18 @@
 package com.example.gamelog.screens.login
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.gamelog.base.Routes
 import com.example.gamelog.data.model.LocalData
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class RegisterViewModel(val localData: LocalData, val navController: NavController): ViewModel() {
+class RegisterViewModel(val localData: LocalData, val navController: NavController, val applicationContext: Context): ViewModel() {
+
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private var _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
@@ -44,8 +50,34 @@ class RegisterViewModel(val localData: LocalData, val navController: NavControll
     }
 
     fun register() {
-        // TODO: handle register logic
-        navController.popBackStack()
+        val emailValue = email.value.trim()
+        val passwordValue = password.value
+
+        setEmailError("")
+        setPasswordError("")
+
+        auth.createUserWithEmailAndPassword(emailValue, passwordValue)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        applicationContext.applicationContext,
+                        "Registrado com sucesso!",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(Routes.Register.route) { inclusive = true }
+                    }
+                } else {
+                    val message = task.exception?.localizedMessage ?: "Erro ao registrar"
+
+                    Toast.makeText(
+                        applicationContext.applicationContext,
+                        message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 
 }

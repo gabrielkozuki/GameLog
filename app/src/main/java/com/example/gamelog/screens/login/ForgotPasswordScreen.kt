@@ -43,59 +43,94 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.gamelog.R
 import com.example.gamelog.base.Navigation
 import com.example.gamelog.ui.theme.GameLogTheme
+import kotlin.sequences.ifEmpty
 
 @Composable
 fun ForgotPasswordScreen(paddingValues: PaddingValues, forgotPasswordViewModel: ForgotPasswordViewModel) {
 
     val email by forgotPasswordViewModel.email.collectAsState()
     val emailError by forgotPasswordViewModel.emailError.collectAsState()
+    val successMessage by forgotPasswordViewModel.successMessage.collectAsState()
 
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = "Será enviado um link no seu e-mail para redefinir sua senha.",
-            fontSize = 14.sp,
-            modifier = Modifier.padding(20.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(
-            value = email,
-            onValueChange = { forgotPasswordViewModel.setEmail(it) },
-            label = { Text(emailError.ifEmpty { "Email" }, color = if (emailError.isNotEmpty()) Red else Unspecified) },
-            leadingIcon = {
-                Icon(Icons.Rounded.AccountCircle, contentDescription = null)
-            },
-            shape = RoundedCornerShape(8.dp),
+    if (successMessage) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp, horizontal = 20.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Transparent,
-                unfocusedIndicatorColor = Transparent
-            )
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                forgotPasswordViewModel.setEmailError(if (email.isBlank()) "O email é obrigatório" else "")
-                if (emailError.isEmpty()) {
-                    forgotPasswordViewModel.recoverPassword()
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(90.dp)
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Redefinir senha")
+
+            Text(
+                text = "Um link para redefinir a senha foi enviado para seu e-mail. Caso não encontrar, verifique a caixa de spam.",
+                fontSize = 14.sp,
+                modifier = Modifier.padding(20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = { forgotPasswordViewModel.goBack() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 50.dp)
+            ) {
+                Text("Voltar para Login")
+            }
+
         }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "Será enviado um link no seu e-mail para redefinir sua senha.",
+                fontSize = 14.sp,
+                modifier = Modifier.padding(20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = email,
+                onValueChange = { forgotPasswordViewModel.setEmail(it) },
+                label = { Text(emailError.ifEmpty { "Email" }, color = if (emailError.isNotEmpty()) Red else Unspecified) },
+                leadingIcon = {
+                    Icon(Icons.Rounded.AccountCircle, contentDescription = null)
+                },
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp, horizontal = 20.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Transparent,
+                    unfocusedIndicatorColor = Transparent
+                )
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    val isEmailBlank = email.isBlank()
+
+                    forgotPasswordViewModel.setEmailError(if (isEmailBlank) "O email é obrigatório" else "")
+
+                    if (!isEmailBlank) {
+                        forgotPasswordViewModel.recoverPassword()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(90.dp)
+            ) {
+                Text("Redefinir senha")
+            }
+
+        }
+
     }
 }

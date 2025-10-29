@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,20 +41,23 @@ class CallScaffold(private val localData: LocalData, val navController: NavContr
         ) { paddingValues ->
             when(screen) {
                 Routes.Login.route -> {
+                    val context = LocalContext.current
                     val viewModel: LoginViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(localData, navController, context.applicationContext)
                     )
                     LoginScreen(paddingValues, viewModel)
                 }
                 Routes.Register.route -> {
+                    val context = LocalContext.current
                     val viewModel: RegisterViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(localData, navController, context.applicationContext)
                     )
                     RegisterScreen(paddingValues, viewModel)
                 }
                 Routes.ForgotPassword.route -> {
+                    val context = LocalContext.current
                     val viewModel: ForgotPasswordViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(localData, navController, context.applicationContext)
                     )
                     ForgotPasswordScreen(paddingValues, viewModel)
                 }
@@ -150,8 +154,9 @@ class CallScaffold(private val localData: LocalData, val navController: NavContr
                     ReviewScreen(paddingValues, viewModel)
                 }
                 3 -> {
+                    val context = LocalContext.current
                     val viewModel: AccountViewModel = viewModel(
-                        factory = ViewModelFactory(localData, navController)
+                        factory = ViewModelFactory(localData, navController, context.applicationContext)
                     )
                     AccountScreen(paddingValues, viewModel)
                 }

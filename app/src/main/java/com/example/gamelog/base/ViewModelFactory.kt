@@ -15,57 +15,51 @@ class ViewModelFactory(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        val viewModel = createViewModelWithNavController(modelClass)
-            ?: createViewModelWithoutNavController(modelClass)
-            ?: createViewModelWithContext(modelClass)
-            ?: throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
-
-        return viewModel as T
+        return createViewModel(modelClass) as T
     }
 
-    private fun <T : ViewModel> createViewModelWithNavController(modelClass: Class<T>): ViewModel? {
-        return try {
-            val constructor = modelClass.getConstructor(
-                LocalData::class.java,
-                NavController::class.java
+    private fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
+        val constructorSignatures = listOf(
+            // (LocalData, NavController, Context)
+            Triple(
+                arrayOf(LocalData::class.java, NavController::class.java, Context::class.java),
+                arrayOf(localData, navController, context),
+                "LocalData, NavController, Context"
+            ),
+            // (LocalData, NavController)
+            Triple(
+                arrayOf(LocalData::class.java, NavController::class.java),
+                arrayOf(localData, navController),
+                "LocalData, NavController"
+            ),
+            // (LocalData, Context)
+            Triple(
+                arrayOf(LocalData::class.java, Context::class.java),
+                arrayOf(localData, context),
+                "LocalData, Context"
+            ),
+            // (LocalData)
+            Triple(
+                arrayOf(LocalData::class.java),
+                arrayOf(localData),
+                "LocalData"
             )
-            constructor.newInstance(localData, requireNavController())
-        } catch (e: NoSuchMethodException) {
-            Log.d("ViewModelFactory", "Error creating ViewModel with NavController: ${e.message}")
-            null
+        )
+
+        for ((paramTypes, paramValues, signature) in constructorSignatures) {
+            if (paramValues.all { it != null }) {
+                try {
+                    val constructor = modelClass.getConstructor(*paramTypes)
+                    return constructor.newInstance(*paramValues)
+                } catch (e: NoSuchMethodException) {
+                    Log.d("ViewModelFactory", "Constructor not found: $signature")
+                }
+            }
         }
-    }
 
-    private fun <T : ViewModel> createViewModelWithoutNavController(modelClass: Class<T>): ViewModel? {
-        return try {
-            val constructor = modelClass.getConstructor(LocalData::class.java)
-            constructor.newInstance(localData)
-        } catch (e: NoSuchMethodException) {
-            Log.d("ViewModelFactory", "Error creating ViewModel without NavController: ${e.message}")
-            null
-        }
-    }
-
-    private fun <T : ViewModel> createViewModelWithContext(modelClass: Class<T>): ViewModel? {
-        return try {
-            val constructor = modelClass.getConstructor(
-                LocalData::class.java,
-                NavController::class.java,
-                Context::class.java
-            )
-            constructor.newInstance(localData, requireNavController(), requireContext())
-        } catch (e: NoSuchMethodException) {
-            Log.d("ViewModelFactory", "Error creating ViewModel with Context: ${e.message}")
-            null
-        }
-    }
-
-    private fun requireNavController(): NavController {
-        return navController ?: throw IllegalStateException("NavController is required")
-    }
-
-    private fun requireContext(): Context {
-        return context ?: throw IllegalStateException("Context is required")
+        throw IllegalArgumentException(
+            "Unknown ViewModel class: ${modelClass.name}. " +
+                    "No matching constructor found with available parameters."
+        )
     }
 }
-

@@ -1,5 +1,9 @@
 package com.example.gamelog.screens.login
 
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +27,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
@@ -34,15 +39,50 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.gamelog.BuildConfig
 import com.example.gamelog.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 
 @Composable
 fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
+    // Google Sign-In config
+    val googleSignInOptions = remember {
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestEmail()
+            .build()
+    }
+
+    val googleSignInClient = remember {
+        GoogleSignIn.getClient(loginViewModel.applicationContext, googleSignInOptions)
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        try {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = task.result
+
+            loginViewModel.launchGoogleSignIn(account.idToken)
+        } catch (e: Exception) {
+            Toast.makeText(
+                loginViewModel.applicationContext,
+                "Erro ao realizar login com Google: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            Log.e("LoginScreen", "Google sign-in failed", e)
+        }
+    }
 
     val email by loginViewModel.email.collectAsState()
     val password by loginViewModel.password.collectAsState()
@@ -124,7 +164,7 @@ fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
             )
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
@@ -140,12 +180,29 @@ fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(90.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Text("Entrar")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        AndroidView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            factory = { context ->
+                SignInButton(context).apply {
+                    setSize(SignInButton.SIZE_WIDE)
+                    setOnClickListener {
+                        val signInIntent = googleSignInClient.signInIntent
+                        launcher.launch(signInIntent)
+                    }
+                }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "Esqueceu a senha?",
@@ -155,7 +212,7 @@ fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // TODO: Improve spacing for all screen sizes
         Row {

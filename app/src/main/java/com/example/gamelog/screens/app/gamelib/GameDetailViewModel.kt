@@ -16,9 +16,9 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class GameDetailViewModel(val localData: LocalData, val navController: NavController, applicationContext: Context): ViewModel() {
+class GameDetailViewModel(val localData: LocalData, val navController: NavController, context: Context): ViewModel() {
 
-    private val appContext = applicationContext.applicationContext
+    private val appContext = context.applicationContext
 
     private val _game = MutableStateFlow<GameDetail?>(null)
     val game: StateFlow<GameDetail?> = _game
