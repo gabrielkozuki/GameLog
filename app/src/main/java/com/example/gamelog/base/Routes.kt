@@ -16,7 +16,11 @@ sealed class Routes(val route: String) {
     }
 
     // list
-    data object GameList: Routes("gameList")
+    data object GameList: Routes("gameList") {
+        fun createRoute() = "gameList/create/"
+        fun editRoute(gameListId: String) = "gameList/edit/$gameListId"
+        fun detailRoute(gameListId: String) = "gameList/detail/$gameListId"
+    }
 
     // review
     data object Review: Routes("review") {

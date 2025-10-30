@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,31 +37,40 @@ fun GameListContentForStatus(
         contentAlignment = Alignment.Center
     ) {
         when {
-            isLoading -> Text("Carregando...")
-            filteredGames.isEmpty() -> Text("Nenhum jogo encontrado")
-            else -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp)
-                ) {
-                    items(
-                        items = filteredGames,
-                        key = { it.id ?: it.hashCode() }
-                    ) { gameDetail ->
-                        GameDetailCardComponent(
-                            gameDetail = gameDetail,
-                            onClick = {
-                                gameDetail.id?.let { firebaseId ->
-                                    gameLibViewModel.navController.navigate(
-                                        Routes.GameDetail.editRoute(firebaseId.toString())
-                                    )
-                                }
-                            }
-                        )
+            isLoading -> {
+                CircularProgressIndicator()
+            }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+            else -> {
+                when {
+                    filteredGames.isEmpty() -> Text("Nenhum jogo encontrado")
+
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp)
+                        ) {
+                            items(
+                                items = filteredGames,
+                                key = { it.id ?: it.hashCode() }
+                            ) { gameDetail ->
+                                GameDetailCardComponent(
+                                    gameDetail = gameDetail,
+                                    onClick = {
+                                        gameDetail.id?.let { firebaseId ->
+                                            gameLibViewModel.navController.navigate(
+                                                Routes.GameDetail.editRoute(firebaseId.toString())
+                                            )
+                                        }
+                                    }
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
                     }
                 }
+
             }
         }
     }

@@ -75,7 +75,11 @@ fun ReviewScreen(paddingValues: PaddingValues, reviewViewModel: ReviewViewModel)
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(reviewViewModel.reviews) { review ->
+                val filteredReviews = reviewViewModel.reviews.filter { review ->
+                    review.gameTitle.contains(searchQuery, ignoreCase = true)
+                }
+
+                items(filteredReviews) { review ->
                     ReviewCard(
                         review = review,
                         onClick = { reviewViewModel.navigateToDetailReview(review.id) }

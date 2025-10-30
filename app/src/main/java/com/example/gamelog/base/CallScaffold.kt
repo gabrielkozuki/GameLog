@@ -21,6 +21,12 @@ import com.example.gamelog.screens.app.gamelib.*
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailScreen
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
+import com.example.gamelog.screens.app.gamelist.CreateGameListScreen
+import com.example.gamelog.screens.app.gamelist.CreateGameListViewModel
+import com.example.gamelog.screens.app.gamelist.EditGameListScreen
+import com.example.gamelog.screens.app.gamelist.EditGameListViewModel
+import com.example.gamelog.screens.app.gamelist.GameListDetailScreen
+import com.example.gamelog.screens.app.gamelist.GameListDetailViewModel
 import com.example.gamelog.screens.app.gamelist.GameListScreen
 import com.example.gamelog.screens.app.gamelist.GameListViewModel
 import com.example.gamelog.screens.app.review.CreateReviewScreen
@@ -118,11 +124,11 @@ class CallScaffold(val navController: NavController) {
             .value?.destination?.route
 
         val selectedIndex = when {
-            currentRoute?.startsWith("gameLib") == true -> 0
+            currentRoute == Routes.GameLib.route -> 0
             currentRoute?.startsWith("gameList") == true -> 1
             currentRoute?.startsWith("review") == true -> 2
-            currentRoute?.startsWith("account") == true -> 3
-            else -> 0
+            currentRoute == Routes.Account.route -> 3
+            else -> -1
         }
 
         Scaffold (
@@ -132,18 +138,18 @@ class CallScaffold(val navController: NavController) {
                         NavigationBarItem(
                             selected = selectedIndex == index,
                             onClick = {
-                                when (index) {
-                                    0 -> navController.navigate(Routes.GameLib.route) {
+                                val route = when (index) {
+                                    0 -> Routes.GameLib.route
+                                    1 -> Routes.GameList.route
+                                    2 -> Routes.Review.route
+                                    3 -> Routes.Account.route
+                                    else -> Routes.GameLib.route
+                                }
+
+                                if (currentRoute != route) {
+                                    navController.navigate(route) {
                                         popUpTo(Routes.GameLib.route) { inclusive = false }
-                                    }
-                                    1 -> navController.navigate(Routes.GameList.route) {
-                                        popUpTo(Routes.GameLib.route) { inclusive = false }
-                                    }
-                                    2 -> navController.navigate(Routes.Review.route) {
-                                        popUpTo(Routes.GameLib.route) { inclusive = false }
-                                    }
-                                    3 -> navController.navigate(Routes.Account.route) {
-                                        popUpTo(Routes.GameLib.route) { inclusive = false }
+                                        launchSingleTop = true
                                     }
                                 }
                             },
@@ -231,6 +237,42 @@ class CallScaffold(val navController: NavController) {
                         factory = ViewModelFactory(navController)
                     )
                     ReviewDetailScreen(innerPadding, viewModel, reviewId ?: "")
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun CreateGameListScreen(mode: String, gamelistId: String?) {
+        Scaffold(
+            topBar = {
+                val title = when (mode) {
+                    "create" -> "Criar Jogatina"
+                    "edit" -> "Editar Jogatina"
+                    "detail" -> "Detalhes da Jogatina"
+                    else -> "Review"
+                }
+                CreateCenterAlignedTopAppBar(string = title)
+            }
+        ) { innerPadding ->
+            when (mode) {
+                "create" -> {
+                    val viewModel: CreateGameListViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    CreateGameListScreen(innerPadding, viewModel)
+                }
+                "edit" -> {
+                    val viewModel: EditGameListViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    EditGameListScreen(innerPadding, viewModel, gamelistId ?: "")
+                }
+                "detail" -> {
+                    val viewModel: GameListDetailViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    GameListDetailScreen(innerPadding, viewModel, gamelistId ?: "")
                 }
             }
         }

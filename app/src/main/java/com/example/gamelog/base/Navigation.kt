@@ -11,9 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
-import com.example.gamelog.screens.app.review.EditReviewViewModel
-import com.example.gamelog.screens.app.review.ReviewDetailViewModel
-import com.example.gamelog.screens.app.review.ReviewViewModel
 
 class Navigation {
     private lateinit var navController: NavHostController
@@ -73,9 +70,33 @@ class Navigation {
                 CallScaffold(navController).CreateScreenApp()
             }
 
+            composable("gameList/create") {
+                CallScaffold(navController).CreateGameListScreen("create", null)
+            }
+
+            composable(
+                route = "gamelist/{mode}/{id}",
+                arguments = listOf(
+                    navArgument("mode") { type = NavType.StringType },
+                    navArgument("id") {
+                        type = NavType.StringType
+                        defaultValue = ""
+                    }
+                )
+            ) { backStackEntry ->
+                val mode = backStackEntry.arguments?.getString("mode") ?: "create"
+                val gamelistId = backStackEntry.arguments?.getString("id")?.takeIf { it.isNotEmpty() }
+
+                CallScaffold(navController).CreateGameListScreen(mode, gamelistId)
+            }
+
             // review
             composable(Routes.Review.route) {
                 CallScaffold(navController).CreateScreenApp()
+            }
+
+            composable("review/create") {
+                CallScaffold(navController).CreateReviewScreen("create", null)
             }
 
             composable(

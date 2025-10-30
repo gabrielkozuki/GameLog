@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -40,26 +44,20 @@ fun GameLibScreen(paddingValues: PaddingValues, gameLibViewModel: GameLibViewMod
         "Abandonado",
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues),
-        contentAlignment = Alignment.BottomEnd
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            StatusTabCarousel(pages, paddingValues, gameLibViewModel)
-        }
-
-        FloatingActionButton(
-            modifier = Modifier.padding(24.dp),
-            onClick = {
-                gameLibViewModel.addGame()
+    Scaffold(
+        modifier = Modifier.padding(paddingValues),
+        floatingActionButton = {
+            FloatingActionButton(onClick = { gameLibViewModel.addGame() }) {
+                Icon(Icons.Default.Add, contentDescription = "Adicionar Jogo")
             }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Text(
-                text = "+",
-                fontSize = 15.sp
-            )
+            StatusTabCarousel(pages, PaddingValues(), gameLibViewModel)
         }
     }
 }
