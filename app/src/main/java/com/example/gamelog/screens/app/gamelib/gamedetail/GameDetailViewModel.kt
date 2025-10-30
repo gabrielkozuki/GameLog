@@ -1,15 +1,14 @@
 package com.example.gamelog.screens.app.gamelib.gamedetail
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.gamelog.base.Routes
 import com.example.gamelog.data.api.RetrofitInstance
-import com.example.gamelog.data.model.GameDetail
-import com.example.gamelog.data.model.GameStatus
+import com.example.gamelog.data.model.game.GameDetail
+import com.example.gamelog.data.model.game.GameStatus
 import com.example.gamelog.data.repository.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

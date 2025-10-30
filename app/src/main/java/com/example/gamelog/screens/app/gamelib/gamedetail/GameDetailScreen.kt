@@ -45,8 +45,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.gamelog.data.model.GameDetail
-import com.example.gamelog.data.model.GameStatus
+import com.example.gamelog.data.model.game.GameDetail
+import com.example.gamelog.data.model.game.GameStatus
 import com.example.gamelog.data.util.formatDate
 import com.example.gamelog.ui.components.GameStatusSelector
 

@@ -1,11 +1,11 @@
 package com.example.gamelog.data.repository
 
 import android.util.Log
-import com.example.gamelog.data.model.FirebaseGameDetail
-import com.example.gamelog.data.model.GameDetail
-import com.example.gamelog.data.model.GameStatus
-import com.example.gamelog.data.model.toFirebase
-import com.example.gamelog.data.model.toDomain
+import com.example.gamelog.data.model.game.FirebaseGameDetail
+import com.example.gamelog.data.model.game.GameDetail
+import com.example.gamelog.data.model.game.GameStatus
+import com.example.gamelog.data.model.game.toFirebase
+import com.example.gamelog.data.model.game.toDomain
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

@@ -1,7 +1,7 @@
 package com.example.gamelog.data.api
 
 import com.example.gamelog.data.api.response.GameResponse
-import com.example.gamelog.data.model.GameDetail
+import com.example.gamelog.data.model.game.GameDetail
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

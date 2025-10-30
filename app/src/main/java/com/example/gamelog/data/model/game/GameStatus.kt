@@ -1,4 +1,4 @@
-package com.example.gamelog.data.model
+package com.example.gamelog.data.model.game
 
 enum class GameStatus(val value: Int, val displayName: String) {
     JOGANDO(1, "Jogando"),

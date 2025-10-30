@@ -6,7 +6,7 @@ sealed class Routes(val route: String) {
     data object Register: Routes("register")
     data object ForgotPassword: Routes("forgotPassword")
 
-    // app
+    // game
     data object GameLib: Routes("gameLib")
     data object Search: Routes("search")
 
@@ -15,8 +15,17 @@ sealed class Routes(val route: String) {
         fun editRoute(firebaseId: String) = "gameDetail/edit/$firebaseId"
     }
 
+    // list
     data object GameList: Routes("gameList")
-    data object Review: Routes("review")
+
+    // review
+    data object Review: Routes("review") {
+        fun createRoute() = "review/create/"
+        fun editRoute(reviewId: String) = "review/edit/$reviewId"
+        fun detailRoute(reviewId: String) = "review/detail/$reviewId"
+    }
+
+    // account
     data object Account: Routes("account")
 
 }

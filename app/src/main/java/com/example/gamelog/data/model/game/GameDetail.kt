@@ -1,4 +1,4 @@
-package com.example.gamelog.data.model
+package com.example.gamelog.data.model.game
 
 import com.google.firebase.database.IgnoreExtraProperties
 import com.google.gson.annotations.SerializedName

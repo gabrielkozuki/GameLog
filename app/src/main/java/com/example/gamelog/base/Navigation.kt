@@ -11,6 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
+import com.example.gamelog.screens.app.review.EditReviewViewModel
+import com.example.gamelog.screens.app.review.ReviewDetailViewModel
+import com.example.gamelog.screens.app.review.ReviewViewModel
 
 class Navigation {
     private lateinit var navController: NavHostController
@@ -31,7 +34,7 @@ class Navigation {
                 CallScaffold(navController).CreateScreen("forgotPassword")
             }
 
-            // app
+            // game
             composable(Routes.GameLib.route) {
                 CallScaffold(navController).CreateScreenApp()
             }
@@ -65,12 +68,33 @@ class Navigation {
                 )
             }
 
+            // list
             composable(Routes.GameList.route) {
                 CallScaffold(navController).CreateScreenApp()
             }
+
+            // review
             composable(Routes.Review.route) {
                 CallScaffold(navController).CreateScreenApp()
             }
+
+            composable(
+                route = "review/{mode}/{id}",
+                arguments = listOf(
+                    navArgument("mode") { type = NavType.StringType },
+                    navArgument("id") {
+                        type = NavType.StringType
+                        defaultValue = ""
+                    }
+                )
+            ) { backStackEntry ->
+                val mode = backStackEntry.arguments?.getString("mode") ?: "create"
+                val reviewId = backStackEntry.arguments?.getString("id")?.takeIf { it.isNotEmpty() }
+
+                CallScaffold(navController).CreateReviewScreen(mode, reviewId)
+            }
+
+            // account
             composable(Routes.Account.route) {
                 CallScaffold(navController).CreateScreenApp()
             }

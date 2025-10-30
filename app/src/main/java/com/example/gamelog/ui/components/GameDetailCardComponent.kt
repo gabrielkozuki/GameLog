@@ -21,7 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.gamelog.data.model.GameDetail
+import com.example.gamelog.data.model.game.GameDetail
 import com.example.gamelog.data.util.formatDate
 
 @Composable

@@ -1,6 +1,5 @@
 package com.example.gamelog.screens.app.gamelib
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,8 +17,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gamelog.data.model.GameStatus
+import com.example.gamelog.data.model.game.GameStatus
 import kotlinx.coroutines.launch
-import kotlin.text.get
 
 @Composable
 fun GameLibScreen(paddingValues: PaddingValues, gameLibViewModel: GameLibViewModel) {
@@ -50,7 +46,7 @@ fun GameLibScreen(paddingValues: PaddingValues, gameLibViewModel: GameLibViewMod
             .padding(paddingValues),
         contentAlignment = Alignment.BottomEnd
     ) {
-        Column(modifier = Modifier.padding(paddingValues)) {
+        Column(modifier = Modifier.fillMaxSize()) {
             StatusTabCarousel(pages, paddingValues, gameLibViewModel)
         }
 

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gamelog.data.model.GameStatus
+import com.example.gamelog.data.model.game.GameStatus
 
 @Composable
 fun GameStatusSelector(

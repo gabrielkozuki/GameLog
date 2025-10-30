@@ -23,6 +23,12 @@ import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailScreen
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailViewModel
 import com.example.gamelog.screens.app.gamelist.GameListScreen
 import com.example.gamelog.screens.app.gamelist.GameListViewModel
+import com.example.gamelog.screens.app.review.CreateReviewScreen
+import com.example.gamelog.screens.app.review.CreateReviewViewModel
+import com.example.gamelog.screens.app.review.EditReviewScreen
+import com.example.gamelog.screens.app.review.EditReviewViewModel
+import com.example.gamelog.screens.app.review.ReviewDetailScreen
+import com.example.gamelog.screens.app.review.ReviewDetailViewModel
 import com.example.gamelog.screens.app.review.ReviewScreen
 import com.example.gamelog.screens.app.review.ReviewViewModel
 import com.example.gamelog.screens.login.*
@@ -74,20 +80,6 @@ class CallScaffold(val navController: NavController) {
         return PaddingValues()
     }
 
-    @Composable
-    fun CreateGameDetailScreen(
-        viewModel: GameDetailViewModel,
-        mode: GameDetailMode
-    ) {
-        Scaffold (
-            topBar = {
-                CreateCenterAlignedTopAppBar(string = "")
-            }
-        ) { innerPadding ->
-            GameDetailScreen(innerPadding, viewModel, mode)
-        }
-    }
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun CreateCenterAlignedTopAppBar(string: String, route: String? = null) {
@@ -95,13 +87,14 @@ class CallScaffold(val navController: NavController) {
             title = { Text(string) },
             navigationIcon = {
                 IconButton(onClick = {
-                    route?.let {
-                        navController.popBackStack(
-                            route = route,
-                            inclusive = false
-                        )
-                    } ?: run {
-                        navController.popBackStack()
+                    if (route != null) {
+                        navController.navigate(route) {
+                            popUpTo(route) { inclusive = false }
+                        }
+                    } else {
+                        if (!navController.popBackStack()) {
+                            navController.navigate(Routes.GameLib.route)
+                        }
                     }
                 }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
@@ -120,7 +113,17 @@ class CallScaffold(val navController: NavController) {
             NavItem(label = "Conta", icon = Icons.Default.Person),
         )
 
-        var selectedIndex by remember { mutableIntStateOf(0) }
+        val currentRoute = navController.currentBackStackEntryFlow
+            .collectAsState(initial = navController.currentBackStackEntry)
+            .value?.destination?.route
+
+        val selectedIndex = when {
+            currentRoute?.startsWith("gameLib") == true -> 0
+            currentRoute?.startsWith("gameList") == true -> 1
+            currentRoute?.startsWith("review") == true -> 2
+            currentRoute?.startsWith("account") == true -> 3
+            else -> 0
+        }
 
         Scaffold (
             bottomBar = {
@@ -128,7 +131,22 @@ class CallScaffold(val navController: NavController) {
                     navItemList.forEachIndexed { index, navItem ->
                         NavigationBarItem(
                             selected = selectedIndex == index,
-                            onClick = { selectedIndex = index },
+                            onClick = {
+                                when (index) {
+                                    0 -> navController.navigate(Routes.GameLib.route) {
+                                        popUpTo(Routes.GameLib.route) { inclusive = false }
+                                    }
+                                    1 -> navController.navigate(Routes.GameList.route) {
+                                        popUpTo(Routes.GameLib.route) { inclusive = false }
+                                    }
+                                    2 -> navController.navigate(Routes.Review.route) {
+                                        popUpTo(Routes.GameLib.route) { inclusive = false }
+                                    }
+                                    3 -> navController.navigate(Routes.Account.route) {
+                                        popUpTo(Routes.GameLib.route) { inclusive = false }
+                                    }
+                                }
+                            },
                             icon = { Icon(navItem.icon, contentDescription = navItem.label) },
                             label = { Text(text = navItem.label, textAlign = TextAlign.Center) }
                         )
@@ -166,4 +184,56 @@ class CallScaffold(val navController: NavController) {
         }
         return PaddingValues()
     }
+
+    // custom scaffolds
+    @Composable
+    fun CreateGameDetailScreen(
+        viewModel: GameDetailViewModel,
+        mode: GameDetailMode
+    ) {
+        Scaffold (
+            topBar = {
+                CreateCenterAlignedTopAppBar(string = "")
+            }
+        ) { innerPadding ->
+            GameDetailScreen(innerPadding, viewModel, mode)
+        }
+    }
+
+    @Composable
+    fun CreateReviewScreen(mode: String, reviewId: String?) {
+        Scaffold(
+            topBar = {
+                val title = when (mode) {
+                    "create" -> "Criar Review"
+                    "edit" -> "Editar Review"
+                    "detail" -> "Detalhes do Review"
+                    else -> "Review"
+                }
+                CreateCenterAlignedTopAppBar(string = title)
+            }
+        ) { innerPadding ->
+            when (mode) {
+                "create" -> {
+                    val viewModel: CreateReviewViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    CreateReviewScreen(innerPadding, viewModel)
+                }
+                "edit" -> {
+                    val viewModel: EditReviewViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    EditReviewScreen(innerPadding, viewModel, reviewId ?: "")
+                }
+                "detail" -> {
+                    val viewModel: ReviewDetailViewModel = viewModel(
+                        factory = ViewModelFactory(navController)
+                    )
+                    ReviewDetailScreen(innerPadding, viewModel, reviewId ?: "")
+                }
+            }
+        }
+    }
+
 }
