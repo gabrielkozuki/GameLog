@@ -1,6 +1,10 @@
 package com.example.gamelog.screens.app.account
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -12,12 +16,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.gamelog.R
 
 @Composable
 fun EditAccountScreen(paddingValues: PaddingValues, viewModel: EditAccountViewModel) {
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.uploadProfileImage(it) }
+    }
 
     Column(
         modifier = Modifier
@@ -28,26 +41,61 @@ fun EditAccountScreen(paddingValues: PaddingValues, viewModel: EditAccountViewMo
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+            modifier = Modifier.size(120.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (viewModel.photoUrl != null) {
-                AsyncImage(
-                    model = viewModel.photoUrl,
-                    contentDescription = "Foto do perfil",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .clickable(enabled = !viewModel.isLoading && !viewModel.isGoogleUser) {
+                        imagePickerLauncher.launch("image/*")
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if (viewModel.photoUrl != null) {
+                    AsyncImage(
+                        model = viewModel.photoUrl,
+                        contentDescription = "Foto do perfil",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = null,
+                        modifier = Modifier.size(100.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+
+            if (!viewModel.isGoogleUser) {
+                FloatingActionButton(
+                    onClick = {
+                        if (!viewModel.isLoading) {
+                            imagePickerLauncher.launch("image/*")
+                        }
+                    },
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.BottomEnd),
+                    containerColor = if (viewModel.isLoading)
+                        MaterialTheme.colorScheme.surfaceVariant
+                    else
+                        MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.photo_camera_24),
+                        contentDescription = "Alterar foto",
+                        modifier = Modifier.size(20.dp),
+                        tint = if (viewModel.isLoading)
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        else
+                            MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
         }
 
@@ -74,7 +122,7 @@ fun EditAccountScreen(paddingValues: PaddingValues, viewModel: EditAccountViewMo
         if (viewModel.isGoogleUser) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "E-mail vinculado à conta Google não pode ser alterado",
+                text = "E-mail e foto vinculados à conta Google não podem ser alterados",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -101,10 +149,9 @@ fun EditAccountScreen(paddingValues: PaddingValues, viewModel: EditAccountViewMo
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = msg,
-                color = MaterialTheme.colorScheme.error,
+                color = if (viewModel.isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
     }
-
 }

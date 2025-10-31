@@ -9,13 +9,14 @@ GameLog é um aplicativo Android desenvolvido em Kotlin com Jetpack Compose que 
 - Busca de Jogos: busque jogos e adicione-os à biblioteca utilizando a API RAWG
 - Reviews: crie e gerencie reviews personalizados dos seus jogos
 - Jogatinas: crie listas customizadas de jogos para diferentes propósitos, como começar uma saga ou listar seus jogos favoritos de 2025
-- Autenticação (e-mail/senha e Google Sign-In)
+- Autenticação (e-mail/senha e Google Sign-In) e edição de perfil do usuário, incluindo upload de foto
 - Dados salvos na nuvem
 
 ### Tecnologias Utilizadas:
 - Kotlin com Jetpack Compose: linguagem de programação e UI
 - Firebase Authentication: autenticação de usuários
 - Firebase Realtime Database: banco de dados
+- Appwrite Storage: cloud storage para upload de imagens de perfil
 - Retrofit: consumo da API RAWG
 - Coil: carregamento de imagens
 - Lottie: animações
@@ -53,7 +54,26 @@ GameLog é um aplicativo Android desenvolvido em Kotlin com Jetpack Compose que 
    GOOGLE_CLIENT_ID="seu_google_client_id"
    ```
 
-Após isso o projeto estará pronto para ser executado no Android Studio.
+4. **Configurar Appwrite Storage:**
+   - Acesse o [Appwrite Console](https://cloud.appwrite.io/)
+   - Crie um novo projeto ou use um existente
+   - Copie o APPWRITE_PROJECT_ID e o APPWRITE_URL do painel do projeto
+   - Acesse Storage e crie um novo bucket para as fotos de perfil
+   - Copie o ID gerado e cole em APPWRITE_BUCKET_ID
+   - Adicione também esses valores ao seu arquivo local.properties:
+     ```properties
+     APPWRITE_URL="https://sfo.cloud.appwrite.io/v1"
+     APPWRITE_PROJECT_ID="seu_project_id"
+     APPWRITE_BUCKET_ID="seu_bucket_id"
+     ```
+
+Após isso o projeto poderá ser executado no Android Studio.
+
+Caso dê erro ao fazer upload da foto:
+- No painel do Appwrite, vá em Overview -> Integrations -> Add platform e selecione Android
+- Em Name adicione "GameLog" e em Package name adicione "com.example.gamelog"
+- Clique em Create Platform e deixe a janela aberta. Em seguida, tente fazer upload da foto novamente
+
 
 ---
 
@@ -71,6 +91,7 @@ app/src/main/java/com/example/gamelog/
 │   ├── api/              # Serviços de API
 │   ├── model/            # Modelos de dados Game, GameDetail, Review
 │   ├── repository/       # Repositórios de dados, fazem a conexão com o Firebase
+│   ├── service/          # Configuração do Appwrite e classe Service de upload de imagem
 │   └── util/             
 ├── screens/              # Telas do aplicativo (screens e viewmodels)
 │   ├── app/

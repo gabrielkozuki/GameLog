@@ -26,6 +26,9 @@ android {
         buildConfigField("String", "RAWG_API_URL", properties.getProperty("RAWG_API_URL"))
         buildConfigField("String", "RAWG_API_KEY", properties.getProperty("RAWG_API_KEY"))
         buildConfigField("String", "GOOGLE_CLIENT_ID", properties.getProperty("GOOGLE_CLIENT_ID"))
+        buildConfigField("String", "APPWRITE_URL", properties.getProperty("APPWRITE_URL"))
+        buildConfigField("String", "APPWRITE_PROJECT_ID", properties.getProperty("APPWRITE_PROJECT_ID"))
+        buildConfigField("String", "APPWRITE_BUCKET_ID", properties.getProperty("APPWRITE_BUCKET_ID"))
     }
 
     buildTypes {
@@ -82,4 +85,5 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.firebase:firebase-database")
+    implementation("io.appwrite:sdk-for-android:11.2.1")
 }
