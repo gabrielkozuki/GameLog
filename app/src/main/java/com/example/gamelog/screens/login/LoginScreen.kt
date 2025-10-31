@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.Button
@@ -45,8 +46,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.gamelog.BuildConfig
 import com.example.gamelog.R
+import com.example.gamelog.data.util.Constants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
@@ -56,7 +57,7 @@ fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
     // Google Sign-In config
     val googleSignInOptions = remember {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestIdToken(Constants.GOOGLE_CLIENT_ID)
             .requestEmail()
             .build()
     }
@@ -121,7 +122,7 @@ fun LoginScreen(paddingValues: PaddingValues, loginViewModel: LoginViewModel) {
             onValueChange = { loginViewModel.setEmail(it) },
             label = { Text(emailError.ifEmpty { "Email" }, color = if (emailError.isNotEmpty()) Red else Unspecified) },
             leadingIcon = {
-                Icon(Icons.Rounded.AccountCircle, contentDescription = null)
+                Icon(Icons.Default.Email, contentDescription = null)
             },
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier

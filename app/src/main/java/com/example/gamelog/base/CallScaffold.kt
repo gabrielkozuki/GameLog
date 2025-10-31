@@ -15,8 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.gamelog.R
-import com.example.gamelog.screens.app.AccountScreen
-import com.example.gamelog.screens.app.AccountViewModel
+import com.example.gamelog.screens.app.account.AccountScreen
+import com.example.gamelog.screens.app.account.AccountViewModel
+import com.example.gamelog.screens.app.account.EditAccountScreen
+import com.example.gamelog.screens.app.account.EditAccountViewModel
 import com.example.gamelog.screens.app.gamelib.*
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailMode
 import com.example.gamelog.screens.app.gamelib.gamedetail.GameDetailScreen
@@ -275,6 +277,22 @@ class CallScaffold(val navController: NavController) {
                     GameListDetailScreen(innerPadding, viewModel, gamelistId ?: "")
                 }
             }
+        }
+    }
+
+    @Composable
+    fun CreateEditAccountScreen() {
+        Scaffold(
+            topBar = {
+                CreateCenterAlignedTopAppBar(string = "Editar Conta")
+            }
+        ) { innerPadding ->
+            val context = LocalContext.current
+            val viewModel: EditAccountViewModel = viewModel(
+                factory = ViewModelFactory(navController, context.applicationContext)
+            )
+
+            EditAccountScreen(innerPadding, viewModel)
         }
     }
 

@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -48,9 +50,11 @@ import com.example.gamelog.ui.theme.GameLogTheme
 @Composable
 fun RegisterScreen(paddingValues: PaddingValues, registerViewModel: RegisterViewModel) {
 
+    val name by registerViewModel.name.collectAsState()
     val email by registerViewModel.email.collectAsState()
     val password by registerViewModel.password.collectAsState()
     val passwordVisible by registerViewModel.passwordVisible.collectAsState()
+    val nameError by registerViewModel.nameError.collectAsState()
     val emailError by registerViewModel.emailError.collectAsState()
     val passwordError by registerViewModel.passwordError.collectAsState()
 
@@ -69,11 +73,30 @@ fun RegisterScreen(paddingValues: PaddingValues, registerViewModel: RegisterView
         Spacer(modifier = Modifier.height(16.dp))
 
         TextField(
+            value = name,
+            onValueChange = { registerViewModel.setName(it) },
+            label = { Text(nameError.ifEmpty { "Nome" }, color = if (nameError.isNotEmpty()) Red else Unspecified) },
+            leadingIcon = {
+                Icon(Icons.Rounded.AccountCircle, contentDescription = null)
+            },
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 20.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Transparent,
+                unfocusedIndicatorColor = Transparent
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
             value = email,
             onValueChange = { registerViewModel.setEmail(it) },
             label = { Text(emailError.ifEmpty { "Email" }, color = if (emailError.isNotEmpty()) Red else Unspecified) },
             leadingIcon = {
-                Icon(Icons.Rounded.AccountCircle, contentDescription = null)
+                Icon(Icons.Default.Email, contentDescription = null)
             },
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier
@@ -136,13 +159,5 @@ fun RegisterScreen(paddingValues: PaddingValues, registerViewModel: RegisterView
         ) {
             Text("Registrar-se")
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun GreetingPreview() {
-    GameLogTheme {
-        Navigation().Create()
     }
 }

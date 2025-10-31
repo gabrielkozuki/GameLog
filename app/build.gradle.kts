@@ -23,6 +23,7 @@ android {
         // get api key from local.properties
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
+        buildConfigField("String", "RAWG_API_URL", properties.getProperty("RAWG_API_URL"))
         buildConfigField("String", "RAWG_API_KEY", properties.getProperty("RAWG_API_KEY"))
         buildConfigField("String", "GOOGLE_CLIENT_ID", properties.getProperty("GOOGLE_CLIENT_ID"))
     }
@@ -80,6 +81,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
     implementation("com.google.firebase:firebase-database")
+
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.0.0"))
+    implementation("io.github.jan-tennert.supabase:storage-kt")
+    implementation("io.ktor:ktor-client-android:2.3.7")
 }

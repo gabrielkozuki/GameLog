@@ -11,7 +11,7 @@ object RetrofitInstance {
         .addInterceptor { chain ->
             val originalRequest = chain.request()
             val url = originalRequest.url.newBuilder()
-                .addQueryParameter("key", Constants.API_KEY)
+                .addQueryParameter("key", Constants.RAWG_API_KEY)
                 .build()
             val newRequest = originalRequest.newBuilder()
                 .url(url)
@@ -22,7 +22,7 @@ object RetrofitInstance {
 
     val api: ApiService by lazy {
         Retrofit.Builder()
-            .baseUrl(Constants.API_URL)
+            .baseUrl(Constants.RAWG_API_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

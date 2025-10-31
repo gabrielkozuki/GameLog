@@ -1,4 +1,4 @@
-package com.example.gamelog.screens.app
+package com.example.gamelog.screens.app.account
 
 import android.content.Context
 import androidx.compose.runtime.getValue
@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
-import com.example.gamelog.BuildConfig
 import com.example.gamelog.base.Routes
+import com.example.gamelog.data.util.Constants
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.Firebase
@@ -17,10 +17,22 @@ class AccountViewModel(val navController: NavController, val applicationContext:
 
     var showLogoutDialog by mutableStateOf(false)
 
-    val currentUser = Firebase.auth.currentUser
-    val userName: String = currentUser?.displayName ?: "Usuário"
-    val userEmail: String = currentUser?.email ?: ""
-    val userPhotoUrl: String? = currentUser?.photoUrl?.toString()
+    private val currentUser get() = Firebase.auth.currentUser
+
+    var userName by mutableStateOf(currentUser?.displayName ?: "Usuário")
+        private set
+
+    var userEmail by mutableStateOf(currentUser?.email ?: "")
+        private set
+
+    var userPhotoUrl by mutableStateOf(currentUser?.photoUrl?.toString())
+        private set
+
+    fun refreshUserData() {
+        userName = currentUser?.displayName ?: "Usuário"
+        userEmail = currentUser?.email ?: ""
+        userPhotoUrl = currentUser?.photoUrl?.toString()
+    }
 
     fun changeShowLogoutDialog(value: Boolean) {
         showLogoutDialog = value
@@ -30,7 +42,7 @@ class AccountViewModel(val navController: NavController, val applicationContext:
         Firebase.auth.signOut()
 
         val googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestIdToken(Constants.GOOGLE_CLIENT_ID)
             .requestEmail()
             .build()
 
@@ -41,4 +53,5 @@ class AccountViewModel(val navController: NavController, val applicationContext:
             }
         }
     }
+
 }

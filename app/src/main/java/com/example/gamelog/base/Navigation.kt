@@ -119,6 +119,11 @@ class Navigation {
             composable(Routes.Account.route) {
                 CallScaffold(navController).CreateScreenApp()
             }
+
+            composable("account/edit") {
+                CallScaffold(navController).CreateEditAccountScreen()
+            }
+
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.gamelog.screens.app
+package com.example.gamelog.screens.app.account
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +35,10 @@ import coil.compose.AsyncImage
 
 @Composable
 fun AccountScreen(paddingValues: PaddingValues, accountViewModel: AccountViewModel) {
+
+    LaunchedEffect(Unit) {
+        accountViewModel.refreshUserData()
+    }
 
     Column(
         modifier = Modifier
@@ -91,7 +96,14 @@ fun AccountScreen(paddingValues: PaddingValues, accountViewModel: AccountViewMod
             }
         }
 
-        // TODO: profile picture upload
+        Button(
+            onClick = { accountViewModel.navController.navigate("account/edit") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            Text(text = "Editar Perfil")
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

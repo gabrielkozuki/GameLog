@@ -30,6 +30,9 @@ sealed class Routes(val route: String) {
     }
 
     // account
-    data object Account: Routes("account")
+    // account
+    data object Account: Routes("account") {
+        fun editRoute() = "account/edit"
+    }
 
 }

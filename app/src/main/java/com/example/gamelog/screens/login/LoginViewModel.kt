@@ -89,12 +89,6 @@ class LoginViewModel(val navController: NavController, val applicationContext: C
         auth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Login com Google realizado com sucesso!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
                     navController.navigate(Routes.GameLib.route) {
                         popUpTo(0) { inclusive = true }
                     }
