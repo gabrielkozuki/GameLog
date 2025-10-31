@@ -28,6 +28,7 @@ GameLog é um aplicativo Android desenvolvido em Kotlin com Jetpack Compose que 
 ### Pré-requisitos:
 - Android Studio com SDK Android 24 ou superior
 - Conta no Firebase
+- Conta no Appwrite
 - Chave da API RAWG (acesse [RAWG.io](https://rawg.io/apidocs) e crie uma conta)
 
 1. **Clone o repositório:**
