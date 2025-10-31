@@ -19,3 +19,5 @@ build/
 !.idea/codeStyles/  # mantém configurações de estilo de código, se necessário
 .DS_Store
 *.log
+google-services.json
+app/google-services.json
